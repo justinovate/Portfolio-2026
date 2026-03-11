@@ -7,7 +7,7 @@ const footerLinks = [
   },
   {
     title: "GitHub",
-    href: "https://github.com/djustinandre",
+    href: "https://github.com/justinovate",
   },
   {
     title: "Resume",
@@ -20,7 +20,7 @@ export const Footer = () => {
     <footer className="relative z-10 overflow-x-clip">
       {/* Gradient Background */}
       <div className="absolute h-[250px] w-[1600px] bottom-0 left-1/2 -translate-x-1/2 bg-emerald-300/20 [mask-image:radial-gradient(50%_50%_at_bottom_center,black,transparent)] -z-10"></div>
-      
+
       <div className="container mx-auto max-w-full px-4">
         <div className="border-t border-white/15 py-6 text-sm flex flex-col md:flex-row md:justify-between items-center gap-4 md:gap-8">
           {/* Left column */}
@@ -30,7 +30,7 @@ export const Footer = () => {
 
           {/* Right column */}
           <nav className="flex flex-col md:flex-row items-center gap-4 md:gap-8 flex-1">
-            {footerLinks.map(link => (
+            {footerLinks.map((link) => (
               <a
                 key={link.title}
                 href={link.href}
