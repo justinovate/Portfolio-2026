@@ -1,0 +1,550 @@
+/* =========================================
+   Global Variables & Retro Arcade Theme
+   ========================================= */
+:root {
+  /* Arcade CLI Theme Colors */
+  --color-bg: #000000;           
+  --color-surface: rgba(10, 15, 25, 0.7); /* translucent box to see canvas */
+  --color-text: #e0e0e0;         
+  --color-text-muted: #888888;   
+  --color-border: #00ffcc;       /* Cyan border */
+  
+  --color-cyan: #00ffcc;
+  --color-magenta: #ff00ff;
+  --color-green: #39ff14;        /* Neon Green */
+  
+  --font-mono: 'Fira Code', 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Neural Network Interactive Canvas */
+#network-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  background: radial-gradient(circle at center, #110022 0%, #000000 100%);
+}
+
+/* CRT Scanlines Overlay */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+}
+
+::selection {
+  background-color: var(--color-green);
+  color: black;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1024px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* =========================================
+   Typography & Utilities
+   ========================================= */
+.text-muted { color: var(--color-text-muted); }
+.text-cyan { color: var(--color-cyan); text-shadow: 0 0 5px var(--color-cyan); }
+.text-magenta { color: var(--color-magenta); text-shadow: 0 0 5px var(--color-magenta); }
+.text-green { color: var(--color-green); text-shadow: 0 0 5px var(--color-green); }
+
+.mt-4 { margin-top: 1rem; }
+.mt-8 { margin-top: 2rem; }
+
+/* Blinking Cursor animation */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Buttons (Terminal Commands) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background-color: rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-cyan);
+  color: black;
+  box-shadow: 0 0 10px var(--color-cyan);
+}
+
+.btn-secondary {
+  color: var(--color-magenta);
+  border-color: var(--color-magenta);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-magenta);
+  color: black;
+  box-shadow: 0 0 10px var(--color-magenta);
+}
+
+/* Terminal Boxes */
+.terminal-box {
+  background-color: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  padding: 2rem;
+  backdrop-filter: blur(5px);
+  position: relative;
+}
+.terminal-box::before {
+  content: '';
+  position: absolute;
+  top: -3px; left: -3px; width: 6px; height: 6px; /* slightly larger */
+  background: var(--color-border);
+}
+.terminal-box::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; right: -3px; width: 6px; height: 6px;
+  background: var(--color-border);
+}
+
+/* Scroll Animation Classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-100 { animation: fadeIn 0.5s 0.5s forwards; opacity: 0; }
+.delay-200 { animation: fadeIn 0.5s 1.0s forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* Section Shared */
+.section-label-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.section-label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+/* =========================================
+   Header (Navigation)
+   ========================================= */
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 1rem;
+  width: 100%;
+  z-index: 50;
+}
+
+.navbar {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px dashed var(--color-cyan);
+  background-color: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+
+.prompt-symbol {
+  color: var(--color-green);
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-item {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: var(--color-magenta);
+  text-shadow: 0 0 5px var(--color-magenta);
+}
+
+.nav-item.active {
+  color: var(--color-cyan);
+  text-shadow: 0 0 5px var(--color-cyan);
+}
+
+@media (max-width: 768px) {
+  .navbar { flex-direction: column; gap: 0.5rem; }
+}
+
+/* =========================================
+   Hero Section
+   ========================================= */
+.hero-section {
+  padding: 10rem 0 6rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.terminal-window {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--color-cyan);
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+  width: 100%;
+}
+
+.terminal-header {
+  background-color: var(--color-cyan);
+  color: black;
+  padding: 0.25rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.btn-close, .btn-min, .btn-max {
+  width: 12px; height: 12px; background: black;
+}
+.terminal-title {
+  margin-left: 1rem;
+}
+
+.terminal-body {
+  padding: 2.5rem;
+}
+
+.sys-msg {
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: var(--color-green);
+  text-shadow: 0 0 5px var(--color-green);
+}
+
+.status-ping {
+  width: 8px; height: 8px;
+  background-color: var(--color-green);
+  border-radius: 50%;
+  animation: blink 1s step-end infinite;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  color: white;
+}
+
+.hero-title .prompt {
+  color: var(--color-magenta);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-cyan);
+  margin-top: 1rem;
+}
+
+.hero-description {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  max-width: 42rem;
+  margin-top: 1.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 640px) {
+  .hero-title { font-size: 1.5rem; }
+  .hero-actions { flex-direction: column; }
+}
+
+/* =========================================
+   Skills Section
+   ========================================= */
+.skills-section {
+  padding: 6rem 0;
+}
+
+.skills-categories {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.skill-category {
+  padding: 1.5rem;
+}
+
+.category-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.skill-item {
+  color: white;
+  font-weight: 600;
+}
+
+.skill-item .bracket {
+  color: var(--color-text-muted);
+}
+
+/* =========================================
+   Projects Section
+   ========================================= */
+.projects-section {
+  padding: 6rem 0;
+}
+
+.projects-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.project-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+}
+
+.project-meta {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.project-title {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.project-divider {
+  height: 1px;
+  background: repeating-linear-gradient(to right, transparent, transparent 5px, var(--color-border) 5px, var(--color-border) 10px);
+  margin: 1rem 0;
+}
+
+.project-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.project-results li {
+  display: flex;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+}
+
+.project-results li::before {
+  content: '>';
+  color: var(--color-magenta);
+}
+
+.project-tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.tech-badge {
+  color: var(--color-bg);
+  background-color: var(--color-cyan);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+}
+
+/* =========================================
+   Contact Section
+   ========================================= */
+.contact-section {
+  padding: 6rem 0;
+}
+
+.contact-form {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-header {
+  color: var(--color-green);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.input-group.col {
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom: none;
+}
+
+.input-group .prompt-symbol {
+  width: 100px;
+  color: var(--color-text-muted);
+}
+
+.form-input {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  color: white;
+  padding: 0.75rem 0;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+}
+
+.form-textarea {
+  width: 100%;
+  border: 1px dashed var(--color-border);
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.btn-submit {
+  align-self: flex-start;
+}
+
+/* =========================================
+   Footer
+   ========================================= */
+.footer {
+  padding: 3rem 0;
+  border-top: 1px dotted var(--color-text-muted);
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+  color: var(--color-cyan);
+}
+
+@media (max-width: 768px) {
+  .footer-container { flex-direction: column; gap: 1rem; text-align: center; }
+}
