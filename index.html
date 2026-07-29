@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Justin's Terminal Portfolio</title>
+  <title>Justin's Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <!-- Interactive Neural Network Background -->
   <canvas id="network-bg"></canvas>
-  
+
   <!-- CRT Scanline Overlay -->
   <div class="scanlines"></div>
 
@@ -27,7 +29,8 @@
         <a href="#projects" class="nav-item">[Projects]</a>
         <a href="#contact" class="nav-item">[Contact]</a>
       </div>
-      <button id="mode-toggle-btn" class="nav-mode-btn" title="Switch between Interactive CLI Shell and Visual Card View">
+      <button id="mode-toggle-btn" class="nav-mode-btn"
+        title="Switch between Interactive CLI Shell and Visual Card View">
         <span class="mode-icon">⚡</span> <span id="mode-btn-text">Switch to GUI Cards</span>
       </button>
     </nav>
@@ -44,10 +47,11 @@
           <span class="terminal-title">justin@mapua-cpe:~ (zsh)</span>
           <span id="active-mode-badge" class="mode-badge">CLI MODE</span>
         </div>
-        
+
         <div class="terminal-body">
           <p class="sys-msg">System Booting...</p>
-          <p class="sys-msg delay-100">Loading modules: CpE, Artificial Intelligence, Web Dev, Microcontrollers... [OK]</p>
+          <p class="sys-msg delay-100">Loading modules: CpE, Artificial Intelligence, Web Dev, Microcontrollers... [OK]
+          </p>
           <div class="availability-badge delay-200">
             <span class="status-ping"></span>
             SYS_STATUS: ONLINE & INTERACTIVE
@@ -58,7 +62,9 @@
           </h1>
           <h2 class="hero-subtitle">Role: Computer Engineering Student (Specialized in Artificial Intelligence)</h2>
           <p class="hero-description">
-            Computer Engineering student specializing in Artificial Intelligence. Building full-stack web platforms (React, Next.js, RAG/LLMs) and prototyping hardware systems using microcontrollers (Arduino) for upcoming embedded engineering projects.
+            Computer Engineering student specializing in Artificial Intelligence. Building full-stack web platforms
+            (React, Next.js, RAG/LLMs) and prototyping hardware systems using microcontrollers (Arduino) for upcoming
+            embedded engineering projects.
           </p>
 
           <!-- Native Terminal Screen & Command Line -->
@@ -66,15 +72,19 @@
             <div id="cli-output" class="cli-output">
               <div class="cli-welcome">
                 <p class="text-cyan">> Welcome to Justin's Interactive Portfolio Shell.</p>
-                <p class="text-green">> Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to see all available Linux shell commands.</p>
-                <p class="text-muted">> Try: <span class="cmd-highlight">ls</span> | <span class="cmd-highlight">cd projects</span> | <span class="cmd-highlight">cat about.txt</span> | <span class="cmd-highlight">cat skills.txt</span> | <span class="cmd-highlight">run career-path-navigator</span></p>
+                <p class="text-green">> Type <span class="cmd-highlight">'help'</span> or <span
+                    class="cmd-highlight">'commands'</span> to see all available Linux shell commands.</p>
+                <p class="text-muted">> Try: <span class="cmd-highlight">ls</span> | <span class="cmd-highlight">cd
+                    projects</span> | <span class="cmd-highlight">cat about.txt</span> | <span class="cmd-highlight">cat
+                    skills.txt</span> | <span class="cmd-highlight">run career-path-navigator</span></p>
               </div>
             </div>
 
             <!-- Inline CLI Input Line (Matches Terminal Theme Exactly, No Page Reloads) -->
             <div class="cli-prompt-line">
               <span id="cli-prompt-text" class="prompt-symbol">root@justin:~$</span>
-              <input type="text" id="cli-input-field" class="cli-input-field" autocomplete="off" spellcheck="false" placeholder="type command here..." autofocus>
+              <input type="text" id="cli-input-field" class="cli-input-field" autocomplete="off" spellcheck="false"
+                placeholder="type command here..." autofocus>
             </div>
           </div>
 
@@ -94,7 +104,7 @@
         <p class="section-label text-cyan">--- Technologies ---</p>
       </div>
       <h2 class="section-title">Directory: /skills/</h2>
-      
+
       <div class="skills-categories">
         <!-- Programming Languages -->
         <div class="skill-category terminal-box">
@@ -134,7 +144,8 @@
           <div class="skills-grid">
             <div class="skill-item"><span class="bracket">[</span>Arduino<span class="bracket">]</span></div>
             <div class="skill-item"><span class="bracket">[</span>Microcontrollers<span class="bracket">]</span></div>
-            <div class="skill-item"><span class="bracket">[</span>Circuit Prototyping<span class="bracket">]</span></div>
+            <div class="skill-item"><span class="bracket">[</span>Circuit Prototyping<span class="bracket">]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -161,8 +172,10 @@
             <h3 class="project-title">> Career Path Navigator</h3>
             <div class="project-divider"></div>
             <ul class="project-results">
-              <li>Developed an Academic & Career Intelligence platform powered by Retrieval-Augmented Generation (RAG) & NLP</li>
-              <li>Maps student skill profiles and adaptive AI quiz results to accredited Philippine university programs and top employers</li>
+              <li>Developed an Academic & Career Intelligence platform powered by Retrieval-Augmented Generation (RAG) &
+                NLP</li>
+              <li>Maps student skill profiles and adaptive AI quiz results to accredited Philippine university programs
+                and top employers</li>
               <li>Built semantic search and personalized recommendation pipelines for data-driven career guidance</li>
             </ul>
             <div class="project-tech-stack">
@@ -171,7 +184,8 @@
               <span class="tech-badge">NLP</span>
               <span class="tech-badge">Semantic Search</span>
             </div>
-            <a href="https://career-path-navigator-mu3b.onrender.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
+            <a href="https://career-path-navigator-mu3b.onrender.com" target="_blank" rel="noopener noreferrer"
+              class="btn btn-primary mt-4">> RUN project.exe</a>
           </div>
         </div>
       </div>
@@ -188,9 +202,12 @@
             <h3 class="project-title">> IEEE-MUSB Member Hub</h3>
             <div class="project-divider"></div>
             <ul class="project-results">
-              <li>Engineered a full-stack student branch management platform for IEEE Mapúa University Student Branch using Next.js App Router and Tailwind CSS</li>
-              <li>Integrated Supabase PostgreSQL with Row Level Security (RLS) for member directory verification, announcements, and officer workflows</li>
-              <li>Deployed on Vercel with real-time database synchronization and interactive AI assistant integration</li>
+              <li>Engineered a full-stack student branch management platform for IEEE Mapúa University Student Branch
+                using Next.js App Router and Tailwind CSS</li>
+              <li>Integrated Supabase PostgreSQL with Row Level Security (RLS) for member directory verification,
+                announcements, and officer workflows</li>
+              <li>Deployed on Vercel with real-time database synchronization and interactive AI assistant integration
+              </li>
             </ul>
             <div class="project-tech-stack">
               <span class="tech-badge">Next.js</span>
@@ -198,7 +215,8 @@
               <span class="tech-badge">Supabase</span>
               <span class="tech-badge">Vercel</span>
             </div>
-            <a href="https://ieee-musb.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
+            <a href="https://ieee-musb.vercel.app/" target="_blank" rel="noopener noreferrer"
+              class="btn btn-primary mt-4">> RUN project.exe</a>
           </div>
 
           <!-- Project 3 -->
@@ -209,9 +227,12 @@
             <h3 class="project-title">> I3CTS 2027 Conference Site</h3>
             <div class="project-divider"></div>
             <ul class="project-results">
-              <li>Architected and deployed the official web platform for an international computing & technology conference</li>
-              <li>Engineered a high-performance React SPA with custom CSS design tokens, dynamic theme switching, and responsive layouts</li>
-              <li>Integrated EasyChair portal workflows to streamline paper submission and track navigation for global researchers</li>
+              <li>Architected and deployed the official web platform for an international computing & technology
+                conference</li>
+              <li>Engineered a high-performance React SPA with custom CSS design tokens, dynamic theme switching, and
+                responsive layouts</li>
+              <li>Integrated EasyChair portal workflows to streamline paper submission and track navigation for global
+                researchers</li>
             </ul>
             <div class="project-tech-stack">
               <span class="tech-badge">React.js</span>
@@ -219,7 +240,8 @@
               <span class="tech-badge">Vite</span>
               <span class="tech-badge">UI/UX Design</span>
             </div>
-            <a href="https://i3cts2027.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
+            <a href="https://i3cts2027.netlify.app/" target="_blank" rel="noopener noreferrer"
+              class="btn btn-primary mt-4">> RUN project.exe</a>
           </div>
         </div>
       </div>
@@ -260,7 +282,7 @@
         <p class="section-label text-magenta">--- Communication Subsystem ---</p>
       </div>
       <h2 class="section-title">Directory: /contact/</h2>
-      
+
       <form method="POST" action="https://getform.io/f/adrdykpa" class="contact-form terminal-box">
         <p class="form-header">> INITIALIZE DIRECTIVE: deleonjustinandre@gmail.com</p>
         <div class="input-group">
@@ -296,4 +318,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
