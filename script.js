@@ -57,7 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Typing Terminal Effect
     // ----------------------------------------
     const typeWriterElement = document.getElementById('typewriter-text');
-    if (typeWriterElement) {
+    let typewriterTimer = null;
+
+    function triggerTypewriter() {
+        if (!typeWriterElement) return;
+        if (typewriterTimer) clearTimeout(typewriterTimer);
+        typeWriterElement.textContent = '';
         const textToType = "Hi, I'm Justin.";
         let charIndex = 0;
         
@@ -65,12 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (charIndex < textToType.length) {
                 typeWriterElement.textContent += textToType.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 100);
+                typewriterTimer = setTimeout(typeWriter, 100);
             }
         }
         
-        setTimeout(typeWriter, 1200);
+        typeWriter();
     }
+
+    setTimeout(triggerTypewriter, 1200);
 
     // ----------------------------------------
     // 3. Neural Network Canvas Background
@@ -399,7 +406,6 @@ RESUME: ./JustinDeLeon_Resume.pdf
         commandHistory.push(trimmed);
         historyIndex = commandHistory.length;
 
-        // Output typed prompt line
         appendOutput(`<span class="cli-user-cmd">root@justin:${getPathString()}$ ${escapeHtml(trimmed)}</span>`);
 
         const parts = trimmed.split(/\s+/);
@@ -729,17 +735,22 @@ RESUME: ./JustinDeLeon_Resume.pdf
             document.body.classList.remove('mode-cli');
             document.body.classList.add('mode-gui');
 
-            const projectsSection = document.getElementById('projects');
-            if (projectsSection) {
-                projectsSection.scrollIntoView({ behavior: 'smooth' });
+            // Redirect smoothly to top section & re-trigger typewriter effect!
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                homeSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            triggerTypewriter();
+
             if (modeBtnText) modeBtnText.textContent = 'Switch to CLI Shell';
             if (activeModeBadge) {
                 activeModeBadge.textContent = 'GUI CARDS';
                 activeModeBadge.style.borderColor = 'var(--color-magenta)';
                 activeModeBadge.style.color = 'var(--color-magenta)';
             }
-            appendOutput(`<span class="text-cyan">Switched focus down to Visual Project Cards.</span>`);
+            appendOutput(`<span class="text-cyan">Switched view mode to Visual GUI Cards & Top Header.</span>`);
         } else {
             document.body.classList.remove('mode-gui');
             document.body.classList.add('mode-cli');
@@ -764,6 +775,5 @@ RESUME: ./JustinDeLeon_Resume.pdf
         });
     }
 
-    // Set initial mode to CLI mode with viewport lock
     toggleViewMode('cli');
 });
