@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------
-    // 4. Interactive Virtual File System & CLI Engine
+    // 4. Interactive Virtual File System & Native CLI Engine
     // ----------------------------------------
     const vfs = {
         name: '/',
@@ -340,13 +340,15 @@ RESUME: ./JustinDeLeon_Resume.pdf
     let currentPath = ['/'];
     let commandHistory = [];
     let historyIndex = -1;
+    let currentMode = 'cli'; // 'cli' or 'gui'
 
-    const cliForm = document.getElementById('cli-form');
-    const cliInput = document.getElementById('cli-input');
-    const cliOutputContainer = document.getElementById('cli-output-container');
-    const cliPrompt = document.getElementById('cli-prompt');
+    const cliInputField = document.getElementById('cli-input-field');
+    const cliOutput = document.getElementById('cli-output');
+    const cliPromptText = document.getElementById('cli-prompt-text');
+    const modeToggleBtn = document.getElementById('mode-toggle-btn');
+    const modeBtnText = document.getElementById('mode-btn-text');
+    const activeModeBadge = document.getElementById('active-mode-badge');
 
-    // Get VFS node at current path
     function getNode(pathArr) {
         let node = vfs;
         for (let i = 1; i < pathArr.length; i++) {
@@ -360,29 +362,26 @@ RESUME: ./JustinDeLeon_Resume.pdf
         return node;
     }
 
-    // Format current path string for prompt
     function getPathString() {
         if (currentPath.length === 1) return '~';
         return '~/' + currentPath.slice(1).join('/');
     }
 
     function updatePrompt() {
-        if (cliPrompt) {
-            cliPrompt.textContent = `root@justin:${getPathString()}$`;
+        if (cliPromptText) {
+            cliPromptText.textContent = `root@justin:${getPathString()}$`;
         }
     }
 
-    // Append CLI line to output
     function appendOutput(htmlContent) {
-        if (!cliOutputContainer) return;
+        if (!cliOutput) return;
         const line = document.createElement('div');
         line.className = 'cli-line';
         line.innerHTML = htmlContent;
-        cliOutputContainer.appendChild(line);
-        cliOutputContainer.scrollTop = cliOutputContainer.scrollHeight;
+        cliOutput.appendChild(line);
+        cliOutput.scrollTop = cliOutput.scrollHeight;
     }
 
-    // Command parser & executor
     function executeCommand(rawCommand) {
         const trimmed = rawCommand.trim();
         if (!trimmed) return;
@@ -390,7 +389,7 @@ RESUME: ./JustinDeLeon_Resume.pdf
         commandHistory.push(trimmed);
         historyIndex = commandHistory.length;
 
-        // Print command prompt line in log
+        // Output typed prompt line in terminal output area
         appendOutput(`<span class="cli-user-cmd">root@justin:${getPathString()}$ ${escapeHtml(trimmed)}</span>`);
 
         const parts = trimmed.split(/\s+/);
@@ -434,8 +433,8 @@ RESUME: ./JustinDeLeon_Resume.pdf
 
             case 'clear':
             case 'cls':
-                if (cliOutputContainer) {
-                    cliOutputContainer.innerHTML = '';
+                if (cliOutput) {
+                    cliOutput.innerHTML = '';
                 }
                 break;
 
@@ -449,25 +448,17 @@ RESUME: ./JustinDeLeon_Resume.pdf
                 if (contactEl) {
                     contactEl.scrollIntoView({ behavior: 'smooth' });
                 }
-                appendOutput(`Scrolling to Contact Subsystem... Email: <a href="mailto:deleonjustinandre@gmail.com" class="cli-link-name">deleonjustinandre@gmail.com</a>`);
+                appendOutput(`Scrolling down to Contact Subsystem... Email: <a href="mailto:deleonjustinandre@gmail.com" class="cli-link-name">deleonjustinandre@gmail.com</a>`);
                 break;
 
             case 'gui':
             case 'mode':
             case 'toggle':
-                const projectsSection = document.getElementById('projects');
-                if (projectsSection) {
-                    projectsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-                appendOutput(`<span class="text-cyan">Switched focus down to Visual Project Cards.</span>`);
-                break;
-
-            case 'theme':
-                appendOutput(`Theme preset: Cyberpunk Cyan & Dark Terminal active.`);
+                toggleViewMode('gui');
                 break;
 
             default:
-                appendOutput(`<span style="color:#ef4444;">zsh: command not found: ${escapeHtml(cmd)}. Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to view available Linux commands.</span>`);
+                appendOutput(`<span style="color:#ef4444;">zsh: command not found: ${escapeHtml(cmd)}. Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to list all supported commands.</span>`);
                 break;
         }
     }
@@ -476,18 +467,18 @@ RESUME: ./JustinDeLeon_Resume.pdf
         appendOutput(`
 <div style="color: var(--color-cyan); font-weight: bold; margin-bottom: 0.5rem;">[AVAILABLE LINUX SHELL COMMANDS]</div>
 <table style="width:100%; border-collapse: collapse; margin: 0.25rem 0;">
-  <tr><td style="color:var(--color-green); width:140px; font-weight:bold;">help / commands</td><td>Display this list of available shell commands</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">ls [path]</td><td>List files & directories in current path</td></tr>
+  <tr><td style="color:var(--color-green); width:140px; font-weight:bold;">help / commands</td><td>Display list of all available CLI shell commands</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">ls [path]</td><td>List files & directories in current working directory</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">cd &lt;dir&gt;</td><td>Change directory (e.g. <span class="cmd-highlight">cd projects</span>, <span class="cmd-highlight">cd ai</span>, <span class="cmd-highlight">cd ..</span>, <span class="cmd-highlight">cd /</span>)</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">pwd</td><td>Print current working directory path</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">cat &lt;file&gt;</td><td>Read file contents (e.g. <span class="cmd-highlight">cat about.txt</span>, <span class="cmd-highlight">cat skills.txt</span>)</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">run &lt;project&gt;</td><td>Open live project in new tab (e.g. <span class="cmd-highlight">run career-path-navigator</span>)</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">clear / cls</td><td>Clear terminal output history</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">whoami</td><td>Display user role and system identity</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">run &lt;project&gt;</td><td>Open live project site in new tab (e.g. <span class="cmd-highlight">run career-path-navigator</span>)</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">clear / cls</td><td>Clear terminal screen output history</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">whoami</td><td>Display user identity and academic role</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">contact</td><td>Scroll to contact section & show email payload</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">gui / mode</td><td>Toggle focus down to visual project cards</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">gui / mode</td><td>Switch focus to classic visual project cards</td></tr>
 </table>
-<div style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem;">PRO TIP: Press <span style="color:white;">Tab</span> for command/filename completion, or use <span style="color:white;">Up/Down Arrow</span> keys for command history.</div>
+<div style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem;">PRO TIP: Press <span style="color:white;">Tab</span> for auto-completion, or <span style="color:white;">Up/Down Arrow</span> keys for command history.</div>
 `);
     }
 
@@ -643,40 +634,39 @@ RESUME: ./JustinDeLeon_Resume.pdf
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    if (cliForm && cliInput) {
-        cliForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const val = cliInput.value;
-            cliInput.value = '';
-            executeCommand(val);
-        });
-
-        cliInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
+    // CLI Input Keydown Event Listener (Catches Enter to prevent page reloads!)
+    if (cliInputField) {
+        cliInputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Stop GET form submit and page refresh!
+                const val = cliInputField.value;
+                cliInputField.value = '';
+                executeCommand(val);
+            } else if (e.key === 'Tab') {
                 e.preventDefault();
                 handleTabCompletion();
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (commandHistory.length > 0) {
                     if (historyIndex > 0) historyIndex--;
-                    cliInput.value = commandHistory[historyIndex] || '';
+                    cliInputField.value = commandHistory[historyIndex] || '';
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
-                    cliInput.value = commandHistory[historyIndex];
+                    cliInputField.value = commandHistory[historyIndex];
                 } else {
                     historyIndex = commandHistory.length;
-                    cliInput.value = '';
+                    cliInputField.value = '';
                 }
             }
         });
     }
 
     function handleTabCompletion() {
-        const val = cliInput.value;
-        const commandsList = ['help', 'commands', 'ls', 'cd', 'pwd', 'cat', 'run', 'clear', 'whoami', 'contact', 'gui', 'mode'];
+        const val = cliInputField.value;
+        const commandsList = ['help', 'commands', 'ls', 'cd', 'pwd', 'cat', 'run', 'clear', 'whoami', 'contact', 'gui'];
         const currentNode = getNode(currentPath);
         let childrenKeys = [];
         if (currentNode && currentNode.children) {
@@ -687,7 +677,7 @@ RESUME: ./JustinDeLeon_Resume.pdf
         if (parts.length === 1) {
             const matches = commandsList.filter(c => c.startsWith(parts[0]));
             if (matches.length === 1) {
-                cliInput.value = matches[0] + ' ';
+                cliInputField.value = matches[0] + ' ';
             } else if (matches.length > 1) {
                 appendOutput(`<span style="color:var(--color-text-muted);">${matches.join(' &nbsp; ')}</span>`);
             }
@@ -696,21 +686,54 @@ RESUME: ./JustinDeLeon_Resume.pdf
             const matches = childrenKeys.filter(k => k.startsWith(target));
             if (matches.length === 1) {
                 parts[parts.length - 1] = matches[0];
-                cliInput.value = parts.join(' ');
+                cliInputField.value = parts.join(' ');
             } else if (matches.length > 1) {
                 appendOutput(`<span style="color:var(--color-text-muted);">${matches.join(' &nbsp; ')}</span>`);
             }
         }
     }
 
-    document.querySelectorAll('.cli-quick-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const cmd = btn.getAttribute('data-cmd');
-            if (cmd) {
-                executeCommand(cmd);
+    // Toggle CLI vs GUI View Mode
+    function toggleViewMode(targetMode) {
+        if (!targetMode) {
+            currentMode = currentMode === 'cli' ? 'gui' : 'cli';
+        } else {
+            currentMode = targetMode;
+        }
+
+        if (currentMode === 'gui') {
+            const projectsSection = document.getElementById('projects');
+            if (projectsSection) {
+                projectsSection.scrollIntoView({ behavior: 'smooth' });
             }
+            if (modeBtnText) modeBtnText.textContent = 'Switch to CLI Shell';
+            if (activeModeBadge) {
+                activeModeBadge.textContent = 'GUI CARDS';
+                activeModeBadge.style.borderColor = 'var(--color-magenta)';
+                activeModeBadge.style.color = 'var(--color-magenta)';
+            }
+            appendOutput(`<span class="text-cyan">Switched focus down to Visual Project Cards.</span>`);
+        } else {
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                homeSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            if (modeBtnText) modeBtnText.textContent = 'Switch to GUI Cards';
+            if (activeModeBadge) {
+                activeModeBadge.textContent = 'CLI MODE';
+                activeModeBadge.style.borderColor = 'var(--color-cyan)';
+                activeModeBadge.style.color = 'var(--color-cyan)';
+            }
+            if (cliInputField) cliInputField.focus();
+            appendOutput(`<span class="text-green">Active mode: Interactive Shell CLI. Type 'help' or 'ls'.</span>`);
+        }
+    }
+
+    if (modeToggleBtn) {
+        modeToggleBtn.addEventListener('click', () => {
+            toggleViewMode();
         });
-    });
+    }
 
     updatePrompt();
 });

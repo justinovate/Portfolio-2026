@@ -550,30 +550,73 @@ ul {
 }
 
 /* =========================================
-   Interactive Terminal Shell Styling
+   Navbar Mode Switcher Button
    ========================================= */
-.cli-output-container {
-  background-color: rgba(10, 15, 25, 0.75);
-  border: 1px solid rgba(0, 255, 204, 0.3);
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-  max-height: 350px;
-  overflow-y: auto;
+.nav-mode-btn {
+  background-color: rgba(0, 255, 204, 0.1);
+  border: 1px dashed var(--color-cyan);
+  color: var(--color-cyan);
   font-family: var(--font-mono);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.25 ease;
   border-radius: 4px;
 }
 
-.cli-output-container::-webkit-scrollbar {
+.nav-mode-btn:hover {
+  background-color: var(--color-cyan);
+  color: black;
+  box-shadow: 0 0 12px var(--color-cyan);
+}
+
+.mode-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: bold;
+  background: black;
+  color: var(--color-cyan);
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--color-cyan);
+  border-radius: 3px;
+}
+
+/* =========================================
+   Interactive Terminal Screen & Inline Prompt
+   ========================================= */
+.terminal-screen {
+  background-color: rgba(5, 10, 18, 0.85);
+  border: 1px solid var(--color-cyan);
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  border-radius: 4px;
+  box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.1), 0 0 15px rgba(0, 255, 204, 0.1);
+}
+
+.cli-output {
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.cli-output::-webkit-scrollbar {
   width: 6px;
 }
 
-.cli-output-container::-webkit-scrollbar-thumb {
+.cli-output::-webkit-scrollbar-thumb {
   background: var(--color-cyan);
 }
 
-.cli-welcome-msg {
+.cli-welcome {
   margin-bottom: 0.75rem;
+  line-height: 1.5;
 }
 
 .cmd-highlight {
@@ -606,77 +649,30 @@ ul {
   text-decoration: underline;
 }
 
-.cli-input-line {
+.cli-prompt-line {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.85);
-  border: 1px solid var(--color-cyan);
-  padding: 0.6rem 1rem;
-  margin-top: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 255, 204, 0.15);
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(0, 255, 204, 0.3);
 }
 
-.cli-input-line input {
+.cli-input-field {
   flex: 1;
   background: transparent;
   border: none;
   color: white;
   font-family: var(--font-mono);
   font-size: 1rem;
+  font-weight: 500;
   outline: none;
+  caret-color: var(--color-cyan);
 }
 
-.cli-submit-btn {
-  background: transparent;
-  border: none;
-  color: var(--color-cyan);
-  font-weight: bold;
-  font-family: var(--font-mono);
-  cursor: pointer;
-}
-
-.cli-quick-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.cli-quick-label {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  font-weight: bold;
-}
-
-.cli-quick-btn {
-  background-color: rgba(0, 255, 204, 0.1);
-  border: 1px solid var(--color-cyan);
-  color: var(--color-cyan);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cli-quick-btn:hover {
-  background-color: var(--color-cyan);
-  color: black;
-}
-
-.cli-quick-btn.mode-toggle {
-  border-color: var(--color-magenta);
-  color: var(--color-magenta);
-  margin-left: auto;
-}
-
-.cli-quick-btn.mode-toggle:hover {
-  background-color: var(--color-magenta);
-  color: black;
+.cli-input-field::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
 }
 
 .project-dir-header {
@@ -690,4 +686,5 @@ ul {
 .mt-5 {
   margin-top: 2.5rem;
 }
+
 

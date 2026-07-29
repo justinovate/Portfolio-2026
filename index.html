@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Justin's Terminal</title>
+  <title>Justin's Terminal Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
@@ -27,10 +27,13 @@
         <a href="#projects" class="nav-item">[Projects]</a>
         <a href="#contact" class="nav-item">[Contact]</a>
       </div>
+      <button id="mode-toggle-btn" class="nav-mode-btn" title="Switch between Interactive CLI Shell and Visual Card View">
+        <span class="mode-icon">⚡</span> <span id="mode-btn-text">Switch to GUI Cards</span>
+      </button>
     </nav>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero & Interactive Terminal Section -->
   <section id="home" class="hero-section">
     <div class="container hero-content reveal">
       <div class="terminal-window">
@@ -38,8 +41,10 @@
           <span class="btn-close"></span>
           <span class="btn-min"></span>
           <span class="btn-max"></span>
-          <span class="terminal-title">justin.exe (Interactive Shell v2.0)</span>
+          <span class="terminal-title">justin@mapua-cpe:~ (zsh)</span>
+          <span id="active-mode-badge" class="mode-badge">CLI MODE</span>
         </div>
+        
         <div class="terminal-body">
           <p class="sys-msg">System Booting...</p>
           <p class="sys-msg delay-100">Loading modules: CpE, Artificial Intelligence, Web Dev, Microcontrollers... [OK]</p>
@@ -56,31 +61,21 @@
             Computer Engineering student specializing in Artificial Intelligence. Building full-stack web platforms (React, Next.js, RAG/LLMs) and prototyping hardware systems using microcontrollers (Arduino) for upcoming embedded engineering projects.
           </p>
 
-          <!-- Interactive CLI Output Area -->
-          <div id="cli-output-container" class="cli-output-container">
-            <div class="cli-welcome-msg">
-              <p class="text-cyan">> Interactive Terminal Engine initialized.</p>
-              <p class="text-green">> Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to view available Linux shell commands.</p>
+          <!-- Native Terminal Screen & Command Line -->
+          <div id="terminal-screen" class="terminal-screen">
+            <div id="cli-output" class="cli-output">
+              <div class="cli-welcome">
+                <p class="text-cyan">> Welcome to Justin's Interactive Portfolio Shell.</p>
+                <p class="text-green">> Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to see all available Linux shell commands.</p>
+                <p class="text-muted">> Try: <span class="cmd-highlight">ls</span> | <span class="cmd-highlight">cd projects</span> | <span class="cmd-highlight">cat about.txt</span> | <span class="cmd-highlight">cat skills.txt</span> | <span class="cmd-highlight">run career-path-navigator</span></p>
+              </div>
             </div>
-          </div>
 
-          <!-- Active Interactive CLI Input Form -->
-          <form id="cli-form" class="cli-input-line">
-            <span id="cli-prompt" class="prompt-symbol">root@justin:~$</span>
-            <input type="text" id="cli-input" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g., 'help', 'ls', 'cd projects')..." autofocus>
-            <button type="submit" class="cli-submit-btn">> RUN</button>
-          </form>
-
-          <!-- Quick Command Toolbar -->
-          <div class="cli-quick-bar">
-            <span class="cli-quick-label">QUICK COMMANDS:</span>
-            <button type="button" class="cli-quick-btn" data-cmd="help">> help</button>
-            <button type="button" class="cli-quick-btn" data-cmd="ls">> ls</button>
-            <button type="button" class="cli-quick-btn" data-cmd="cd projects">> cd projects</button>
-            <button type="button" class="cli-quick-btn" data-cmd="cat about.txt">> cat about.txt</button>
-            <button type="button" class="cli-quick-btn" data-cmd="cat skills.txt">> cat skills.txt</button>
-            <button type="button" class="cli-quick-btn" data-cmd="clear">> clear</button>
-            <button type="button" class="cli-quick-btn mode-toggle" data-cmd="gui">> toggle card view</button>
+            <!-- Inline CLI Input Line (Matches Terminal Theme Exactly, No Page Reloads) -->
+            <div class="cli-prompt-line">
+              <span id="cli-prompt-text" class="prompt-symbol">root@justin:~$</span>
+              <input type="text" id="cli-input-field" class="cli-input-field" autocomplete="off" spellcheck="false" placeholder="type command here..." autofocus>
+            </div>
           </div>
 
           <div class="hero-actions">
@@ -257,8 +252,6 @@
 
     </div>
   </section>
-    </div>
-  </section>
 
   <!-- Contact Section -->
   <section id="contact" class="contact-section">
@@ -291,7 +284,7 @@
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-copy text-green">
-        [SYS] &copy; 2025 Justin De Leon. EOF.
+        [SYS] &copy; 2026 Justin De Leon. EOF.
       </div>
       <nav class="footer-links">
         <a href="https://www.linkedin.com/in/j-deleon/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
