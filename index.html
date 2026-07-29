@@ -38,15 +38,16 @@
           <span class="btn-close"></span>
           <span class="btn-min"></span>
           <span class="btn-max"></span>
-          <span class="terminal-title">justin.exe</span>
+          <span class="terminal-title">justin.exe (Interactive Shell v2.0)</span>
         </div>
         <div class="terminal-body">
           <p class="sys-msg">System Booting...</p>
           <p class="sys-msg delay-100">Loading modules: CpE, Artificial Intelligence, Web Dev, Microcontrollers... [OK]</p>
           <div class="availability-badge delay-200">
             <span class="status-ping"></span>
-            SYS_STATUS: AVAILABLE
+            SYS_STATUS: ONLINE & INTERACTIVE
           </div>
+
           <h1 class="hero-title">
             <span class="prompt">></span> <span id="typewriter-text"></span><span class="cursor">_</span>
           </h1>
@@ -54,6 +55,34 @@
           <p class="hero-description">
             Computer Engineering student specializing in Artificial Intelligence. Building full-stack web platforms (React, Next.js, RAG/LLMs) and prototyping hardware systems using microcontrollers (Arduino) for upcoming embedded engineering projects.
           </p>
+
+          <!-- Interactive CLI Output Area -->
+          <div id="cli-output-container" class="cli-output-container">
+            <div class="cli-welcome-msg">
+              <p class="text-cyan">> Interactive Terminal Engine initialized.</p>
+              <p class="text-green">> Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to view available Linux shell commands.</p>
+            </div>
+          </div>
+
+          <!-- Active Interactive CLI Input Form -->
+          <form id="cli-form" class="cli-input-line">
+            <span id="cli-prompt" class="prompt-symbol">root@justin:~$</span>
+            <input type="text" id="cli-input" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g., 'help', 'ls', 'cd projects')..." autofocus>
+            <button type="submit" class="cli-submit-btn">> RUN</button>
+          </form>
+
+          <!-- Quick Command Toolbar -->
+          <div class="cli-quick-bar">
+            <span class="cli-quick-label">QUICK COMMANDS:</span>
+            <button type="button" class="cli-quick-btn" data-cmd="help">> help</button>
+            <button type="button" class="cli-quick-btn" data-cmd="ls">> ls</button>
+            <button type="button" class="cli-quick-btn" data-cmd="cd projects">> cd projects</button>
+            <button type="button" class="cli-quick-btn" data-cmd="cat about.txt">> cat about.txt</button>
+            <button type="button" class="cli-quick-btn" data-cmd="cat skills.txt">> cat skills.txt</button>
+            <button type="button" class="cli-quick-btn" data-cmd="clear">> clear</button>
+            <button type="button" class="cli-quick-btn mode-toggle" data-cmd="gui">> toggle card view</button>
+          </div>
+
           <div class="hero-actions">
             <a href="#projects" class="btn btn-primary">> ./view_projects.sh</a>
             <a href="#contact" class="btn btn-secondary">> ping contact</a>
@@ -125,72 +154,109 @@
       </div>
       <h2 class="section-title">Directory: /projects/</h2>
 
-      <div class="projects-list">
-        
-        <!-- Project 1 -->
-        <div class="project-card terminal-box">
-          <div class="project-meta text-cyan">
-            <span>[MAPÚA_UNIV]</span> : <span class="year">2025</span>
+      <!-- Directory 1: AI & NLP -->
+      <div class="project-category-group">
+        <h3 class="project-dir-header text-magenta">> cd /projects/ai/</h3>
+        <div class="projects-list">
+          <!-- Project 1 -->
+          <div class="project-card terminal-box">
+            <div class="project-meta text-cyan">
+              <span>[MAPÚA_UNIV]</span> : <span class="year">2025</span>
+            </div>
+            <h3 class="project-title">> Career Path Navigator</h3>
+            <div class="project-divider"></div>
+            <ul class="project-results">
+              <li>Developed an Academic & Career Intelligence platform powered by Retrieval-Augmented Generation (RAG) & NLP</li>
+              <li>Maps student skill profiles and adaptive AI quiz results to accredited Philippine university programs and top employers</li>
+              <li>Built semantic search and personalized recommendation pipelines for data-driven career guidance</li>
+            </ul>
+            <div class="project-tech-stack">
+              <span class="tech-badge">Python</span>
+              <span class="tech-badge">RAG / LLMs</span>
+              <span class="tech-badge">NLP</span>
+              <span class="tech-badge">Semantic Search</span>
+            </div>
+            <a href="https://career-path-navigator-mu3b.onrender.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
           </div>
-          <h3 class="project-title">> Career Path Navigator</h3>
-          <div class="project-divider"></div>
-          <ul class="project-results">
-            <li>Developed an Academic & Career Intelligence platform powered by Retrieval-Augmented Generation (RAG) & NLP</li>
-            <li>Maps student skill profiles and adaptive AI quiz results to accredited Philippine university programs and top employers</li>
-            <li>Built semantic search and personalized recommendation pipelines for data-driven career guidance</li>
-          </ul>
-          <div class="project-tech-stack">
-            <span class="tech-badge">Python</span>
-            <span class="tech-badge">RAG / LLMs</span>
-            <span class="tech-badge">NLP</span>
-            <span class="tech-badge">Semantic Search</span>
-          </div>
-          <a href="https://career-path-navigator-mu3b.onrender.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
         </div>
-
-        <!-- Project 2 -->
-        <div class="project-card terminal-box">
-          <div class="project-meta text-cyan">
-            <span>[MAPÚA_UNIV]</span> : <span class="year">2026</span>
-          </div>
-          <h3 class="project-title">> IEEE-MUSB Member Hub</h3>
-          <div class="project-divider"></div>
-          <ul class="project-results">
-            <li>Engineered a full-stack student branch management platform for IEEE Mapúa University Student Branch using Next.js App Router and Tailwind CSS</li>
-            <li>Integrated Supabase PostgreSQL with Row Level Security (RLS) for member directory verification, announcements, and officer workflows</li>
-            <li>Deployed on Vercel with real-time database synchronization and interactive AI assistant integration</li>
-          </ul>
-          <div class="project-tech-stack">
-            <span class="tech-badge">Next.js</span>
-            <span class="tech-badge">Tailwind CSS</span>
-            <span class="tech-badge">Supabase</span>
-            <span class="tech-badge">Vercel</span>
-          </div>
-          <a href="https://ieee-musb.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
-        </div>
-
-        <!-- Project 3 -->
-        <div class="project-card terminal-box">
-          <div class="project-meta text-cyan">
-            <span>[MAPÚA_UNIV]</span> : <span class="year">2027</span>
-          </div>
-          <h3 class="project-title">> I3CTS 2027 Conference Site</h3>
-          <div class="project-divider"></div>
-          <ul class="project-results">
-            <li>Architected and deployed the official web platform for an international computing & technology conference</li>
-            <li>Engineered a high-performance React SPA with custom CSS design tokens, dynamic theme switching, and responsive layouts</li>
-            <li>Integrated EasyChair portal workflows to streamline paper submission and track navigation for global researchers</li>
-          </ul>
-          <div class="project-tech-stack">
-            <span class="tech-badge">React.js</span>
-            <span class="tech-badge">JavaScript</span>
-            <span class="tech-badge">Vite</span>
-            <span class="tech-badge">UI/UX Design</span>
-          </div>
-          <a href="https://i3cts2027.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
-        </div>
-
       </div>
+
+      <!-- Directory 2: Web Apps -->
+      <div class="project-category-group mt-5">
+        <h3 class="project-dir-header text-cyan">> cd /projects/web_apps/</h3>
+        <div class="projects-list">
+          <!-- Project 2 -->
+          <div class="project-card terminal-box">
+            <div class="project-meta text-cyan">
+              <span>[MAPÚA_UNIV]</span> : <span class="year">2026</span>
+            </div>
+            <h3 class="project-title">> IEEE-MUSB Member Hub</h3>
+            <div class="project-divider"></div>
+            <ul class="project-results">
+              <li>Engineered a full-stack student branch management platform for IEEE Mapúa University Student Branch using Next.js App Router and Tailwind CSS</li>
+              <li>Integrated Supabase PostgreSQL with Row Level Security (RLS) for member directory verification, announcements, and officer workflows</li>
+              <li>Deployed on Vercel with real-time database synchronization and interactive AI assistant integration</li>
+            </ul>
+            <div class="project-tech-stack">
+              <span class="tech-badge">Next.js</span>
+              <span class="tech-badge">Tailwind CSS</span>
+              <span class="tech-badge">Supabase</span>
+              <span class="tech-badge">Vercel</span>
+            </div>
+            <a href="https://ieee-musb.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card terminal-box">
+            <div class="project-meta text-cyan">
+              <span>[MAPÚA_UNIV]</span> : <span class="year">2027</span>
+            </div>
+            <h3 class="project-title">> I3CTS 2027 Conference Site</h3>
+            <div class="project-divider"></div>
+            <ul class="project-results">
+              <li>Architected and deployed the official web platform for an international computing & technology conference</li>
+              <li>Engineered a high-performance React SPA with custom CSS design tokens, dynamic theme switching, and responsive layouts</li>
+              <li>Integrated EasyChair portal workflows to streamline paper submission and track navigation for global researchers</li>
+            </ul>
+            <div class="project-tech-stack">
+              <span class="tech-badge">React.js</span>
+              <span class="tech-badge">JavaScript</span>
+              <span class="tech-badge">Vite</span>
+              <span class="tech-badge">UI/UX Design</span>
+            </div>
+            <a href="https://i3cts2027.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">> RUN project.exe</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Directory 3: Hardware & Embedded Systems -->
+      <div class="project-category-group mt-5">
+        <h3 class="project-dir-header text-green">> cd /projects/hardware/</h3>
+        <div class="projects-list">
+          <div class="project-card terminal-box">
+            <div class="project-meta text-cyan">
+              <span>[CpE_LAB]</span> : <span class="year">2026</span>
+            </div>
+            <h3 class="project-title">> Microcontroller & Arduino Prototypes</h3>
+            <div class="project-divider"></div>
+            <ul class="project-results">
+              <li>Developing embedded systems and circuit prototypes using Arduino & ESP32 microcontrollers</li>
+              <li>Focusing on sensor data telemetry, hardware control, and real-time microcontroller interfaces</li>
+              <li>Upcoming hardware prototypes to be featured in portfolio release</li>
+            </ul>
+            <div class="project-tech-stack">
+              <span class="tech-badge">Arduino</span>
+              <span class="tech-badge">C++</span>
+              <span class="tech-badge">ESP32</span>
+              <span class="tech-badge">Microcontrollers</span>
+            </div>
+            <a href="#contact" class="btn btn-secondary mt-4">> STATUS: IN_DEVELOPMENT</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
     </div>
   </section>
 

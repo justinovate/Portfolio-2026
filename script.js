@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                revealObserver.unobserve(entry.target); // only reveal once
+                revealObserver.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
@@ -65,12 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (charIndex < textToType.length) {
                 typeWriterElement.textContent += textToType.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 100); // typing speed
+                setTimeout(typeWriter, 100);
             }
         }
         
-        // Start typing after a short delay
-        setTimeout(typeWriter, 1500);
+        setTimeout(typeWriter, 1200);
     }
 
     // ----------------------------------------
@@ -81,11 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = canvas.getContext('2d');
         let particlesArray;
 
-        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // Mouse position
         let mouse = {
             x: null,
             y: null,
@@ -102,14 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mouse.y = undefined;
         });
 
-        // Resize event
         window.addEventListener('resize', function() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            init(); // Re-initialize particles to fit new screen
+            init();
         });
 
-        // Create Particle
         class Particle {
             constructor(x, y, dirX, dirY, size, color) {
                 this.x = x;
@@ -119,33 +114,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.size = size;
                 this.color = color;
             }
-            // Draw method
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
                 ctx.fill();
             }
-            // Update method
             update() {
-                // Check if particle is still within canvas
                 if (this.x > canvas.width || this.x < 0) {
                     this.dirX = -this.dirX;
                 }
                 if (this.y > canvas.height || this.y < 0) {
                     this.dirY = -this.dirY;
                 }
-
-                // Move particle
                 this.x += this.dirX;
                 this.y += this.dirY;
 
-                // Mouse interactivity
                 if (mouse.x != null && mouse.y != null) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
-                    // Slow down slightly if near mouse
                     if (distance < mouse.radius) {
                         this.x -= dx * 0.01;
                         this.y -= dy * 0.01;
@@ -156,25 +144,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Initialize particle array
         function init() {
             particlesArray = [];
-            // Amount of particles based on screen size
             let numberOfParticles = (canvas.height * canvas.width) / 12000;
             
             for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1; // 1 to 3
+                let size = (Math.random() * 2) + 1;
                 let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let dirX = (Math.random() * 2) - 1; // -1 to 1 speed
+                let dirX = (Math.random() * 2) - 1;
                 let dirY = (Math.random() * 2) - 1;
-                let color = 'rgba(0, 255, 204, 0.8)'; // Cyan particles
+                let color = 'rgba(0, 255, 204, 0.8)';
 
                 particlesArray.push(new Particle(x, y, dirX, dirY, size, color));
             }
         }
 
-        // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, innerWidth, innerHeight);
@@ -185,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
             connect();
         }
 
-        // Connect particles close to each other
         function connect() {
             let opacityValue = 1;
             for (let a = 0; a < particlesArray.length; a++) {
@@ -204,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 
-                // Draw line to mouse
                 if (mouse.x != null && mouse.y != null) {
                     let mouseDistance = Math.sqrt(
                         Math.pow((particlesArray[a].x - mouse.x), 2) + 
@@ -212,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
                     
                     if (mouseDistance < mouse.radius) {
-                        ctx.strokeStyle = `rgba(255, 0, 255, ${1 - mouseDistance/mouse.radius})`; // Magenta links to mouse
+                        ctx.strokeStyle = `rgba(255, 0, 255, ${1 - mouseDistance/mouse.radius})`;
                         ctx.lineWidth = 1.5;
                         ctx.beginPath();
                         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -226,4 +209,508 @@ document.addEventListener('DOMContentLoaded', () => {
         init();
         animate();
     }
+
+    // ----------------------------------------
+    // 4. Interactive Virtual File System & CLI Engine
+    // ----------------------------------------
+    const vfs = {
+        name: '/',
+        type: 'dir',
+        children: {
+            'about.txt': {
+                name: 'about.txt',
+                type: 'file',
+                description: 'Personal Bio & Engineering Background',
+                content: `
+USER: Justin Andre De Leon
+ROLE: Computer Engineering Student (Specializing in Artificial Intelligence)
+INSTITUTION: Mapúa University, Manila
+
+SUMMARY:
+Building clean, user-focused applications and scalable systems at the intersection of modern software engineering, Artificial Intelligence, and embedded hardware.
+
+CURRENT FOCUS:
+- Full-Stack Web Development (React.js, Next.js, Tailwind CSS, Supabase)
+- AI & NLP Systems (Retrieval-Augmented Generation, LLMs, Semantic Search)
+- Hardware & Microcontrollers (Arduino, ESP32, Circuit Prototyping)
+`
+            },
+            'skills.txt': {
+                name: 'skills.txt',
+                type: 'file',
+                description: 'Technical Skills Matrix',
+                content: `
+[PROGRAMMING LANGUAGES]
+- Python, JavaScript (ES6+), C / C++
+
+[ARTIFICIAL INTELLIGENCE]
+- RAG & LLMs, Semantic Search, TensorFlow, Scikit-learn, NLP
+
+[WEB ARCHITECTURE]
+- React.js, Next.js, Tailwind CSS, Supabase, Node.js, Vercel, Netlify
+
+[HARDWARE & EMBEDDED]
+- Arduino Microcontrollers, Circuit Prototyping, Sensors & Actuators
+`
+            },
+            'contact.txt': {
+                name: 'contact.txt',
+                type: 'file',
+                description: 'Communication Channels',
+                content: `
+EMAIL: deleonjustinandre@gmail.com
+LINKEDIN: https://www.linkedin.com/in/j-deleon/
+GITHUB: https://github.com/justinovate
+RESUME: ./JustinDeLeon_Resume.pdf
+`
+            },
+            'resume.pdf': {
+                name: 'resume.pdf',
+                type: 'link',
+                description: 'Resume Download Link',
+                url: './JustinDeLeon_Resume.pdf'
+            },
+            'projects': {
+                name: 'projects',
+                type: 'dir',
+                description: 'Categorized Project Directory',
+                children: {
+                    'ai': {
+                        name: 'ai',
+                        type: 'dir',
+                        description: 'Artificial Intelligence & NLP Projects',
+                        children: {
+                            'career-path-navigator': {
+                                name: 'career-path-navigator',
+                                type: 'project',
+                                title: 'Career Path Navigator',
+                                year: '2025',
+                                tech: ['Python', 'RAG / LLMs', 'NLP', 'Semantic Search'],
+                                url: 'https://career-path-navigator-mu3b.onrender.com',
+                                description: 'Academic & Career Intelligence platform powered by Retrieval-Augmented Generation (RAG) & NLP. Maps student skill profiles and adaptive AI quiz results to Philippine university programs and top employers.'
+                            }
+                        }
+                    },
+                    'web_apps': {
+                        name: 'web_apps',
+                        type: 'dir',
+                        description: 'Web Applications & Full-Stack Systems',
+                        children: {
+                            'ieee-musb-hub': {
+                                name: 'ieee-musb-hub',
+                                type: 'project',
+                                title: 'IEEE-MUSB Member Hub',
+                                year: '2026',
+                                tech: ['Next.js', 'Tailwind CSS', 'Supabase', 'Vercel'],
+                                url: 'https://ieee-musb.vercel.app/',
+                                description: 'Full-stack management system for IEEE Mapúa University Student Branch. Features member directory verification, announcement portal, and Supabase RLS security.'
+                            },
+                            'i3cts-2027-conference': {
+                                name: 'i3cts-2027-conference',
+                                type: 'project',
+                                title: 'I3CTS 2027 Conference Site',
+                                year: '2027',
+                                tech: ['React.js', 'JavaScript', 'Vite', 'UI/UX Design'],
+                                url: 'https://i3cts2027.netlify.app/',
+                                description: 'Official web platform for the International Conference on Consumer, Computing, and Communications Technology Systems (I3CTS 2027) with EasyChair integration.'
+                            }
+                        }
+                    },
+                    'hardware': {
+                        name: 'hardware',
+                        type: 'dir',
+                        description: 'Embedded Systems & Microcontroller Prototypes',
+                        children: {
+                            'microcontroller-dev': {
+                                name: 'microcontroller-dev',
+                                type: 'project',
+                                title: 'Microcontroller & Arduino Prototypes',
+                                year: '2026',
+                                tech: ['Arduino', 'C++', 'ESP32', 'Sensors'],
+                                url: '#contact',
+                                description: 'Developing embedded systems and circuit prototypes using Arduino & ESP32 microcontrollers for sensor telemetry and hardware control.'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    let currentPath = ['/'];
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    const cliForm = document.getElementById('cli-form');
+    const cliInput = document.getElementById('cli-input');
+    const cliOutputContainer = document.getElementById('cli-output-container');
+    const cliPrompt = document.getElementById('cli-prompt');
+
+    // Get VFS node at current path
+    function getNode(pathArr) {
+        let node = vfs;
+        for (let i = 1; i < pathArr.length; i++) {
+            const part = pathArr[i];
+            if (node.children && node.children[part]) {
+                node = node.children[part];
+            } else {
+                return null;
+            }
+        }
+        return node;
+    }
+
+    // Format current path string for prompt
+    function getPathString() {
+        if (currentPath.length === 1) return '~';
+        return '~/' + currentPath.slice(1).join('/');
+    }
+
+    function updatePrompt() {
+        if (cliPrompt) {
+            cliPrompt.textContent = `root@justin:${getPathString()}$`;
+        }
+    }
+
+    // Append CLI line to output
+    function appendOutput(htmlContent) {
+        if (!cliOutputContainer) return;
+        const line = document.createElement('div');
+        line.className = 'cli-line';
+        line.innerHTML = htmlContent;
+        cliOutputContainer.appendChild(line);
+        cliOutputContainer.scrollTop = cliOutputContainer.scrollHeight;
+    }
+
+    // Command parser & executor
+    function executeCommand(rawCommand) {
+        const trimmed = rawCommand.trim();
+        if (!trimmed) return;
+
+        commandHistory.push(trimmed);
+        historyIndex = commandHistory.length;
+
+        // Print command prompt line in log
+        appendOutput(`<span class="cli-user-cmd">root@justin:${getPathString()}$ ${escapeHtml(trimmed)}</span>`);
+
+        const parts = trimmed.split(/\s+/);
+        const cmd = parts[0].toLowerCase();
+        const args = parts.slice(1);
+
+        const currentNode = getNode(currentPath);
+
+        switch (cmd) {
+            case 'help':
+            case 'commands':
+            case 'show commands':
+            case '?':
+                showHelp();
+                break;
+
+            case 'ls':
+            case 'dir':
+                listDirectory(currentNode, args[0]);
+                break;
+
+            case 'cd':
+                changeDirectory(args[0]);
+                break;
+
+            case 'pwd':
+                appendOutput(`/${currentPath.slice(1).join('/')}`);
+                break;
+
+            case 'cat':
+            case 'view':
+            case 'read':
+                catFile(currentNode, args[0]);
+                break;
+
+            case 'run':
+            case 'open':
+            case 'exec':
+                runProject(currentNode, args[0]);
+                break;
+
+            case 'clear':
+            case 'cls':
+                if (cliOutputContainer) {
+                    cliOutputContainer.innerHTML = '';
+                }
+                break;
+
+            case 'whoami':
+                appendOutput(`Justin De Leon | Computer Engineering Student (AI Specialization) @ Mapúa University`);
+                break;
+
+            case 'contact':
+            case 'ping':
+                const contactEl = document.getElementById('contact');
+                if (contactEl) {
+                    contactEl.scrollIntoView({ behavior: 'smooth' });
+                }
+                appendOutput(`Scrolling to Contact Subsystem... Email: <a href="mailto:deleonjustinandre@gmail.com" class="cli-link-name">deleonjustinandre@gmail.com</a>`);
+                break;
+
+            case 'gui':
+            case 'mode':
+            case 'toggle':
+                const projectsSection = document.getElementById('projects');
+                if (projectsSection) {
+                    projectsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                appendOutput(`<span class="text-cyan">Switched focus down to Visual Project Cards.</span>`);
+                break;
+
+            case 'theme':
+                appendOutput(`Theme preset: Cyberpunk Cyan & Dark Terminal active.`);
+                break;
+
+            default:
+                appendOutput(`<span style="color:#ef4444;">zsh: command not found: ${escapeHtml(cmd)}. Type <span class="cmd-highlight">'help'</span> or <span class="cmd-highlight">'commands'</span> to view available Linux commands.</span>`);
+                break;
+        }
+    }
+
+    function showHelp() {
+        appendOutput(`
+<div style="color: var(--color-cyan); font-weight: bold; margin-bottom: 0.5rem;">[AVAILABLE LINUX SHELL COMMANDS]</div>
+<table style="width:100%; border-collapse: collapse; margin: 0.25rem 0;">
+  <tr><td style="color:var(--color-green); width:140px; font-weight:bold;">help / commands</td><td>Display this list of available shell commands</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">ls [path]</td><td>List files & directories in current path</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">cd &lt;dir&gt;</td><td>Change directory (e.g. <span class="cmd-highlight">cd projects</span>, <span class="cmd-highlight">cd ai</span>, <span class="cmd-highlight">cd ..</span>, <span class="cmd-highlight">cd /</span>)</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">pwd</td><td>Print current working directory path</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">cat &lt;file&gt;</td><td>Read file contents (e.g. <span class="cmd-highlight">cat about.txt</span>, <span class="cmd-highlight">cat skills.txt</span>)</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">run &lt;project&gt;</td><td>Open live project in new tab (e.g. <span class="cmd-highlight">run career-path-navigator</span>)</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">clear / cls</td><td>Clear terminal output history</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">whoami</td><td>Display user role and system identity</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">contact</td><td>Scroll to contact section & show email payload</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">gui / mode</td><td>Toggle focus down to visual project cards</td></tr>
+</table>
+<div style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem;">PRO TIP: Press <span style="color:white;">Tab</span> for command/filename completion, or use <span style="color:white;">Up/Down Arrow</span> keys for command history.</div>
+`);
+    }
+
+    function listDirectory(currentNode, targetArg) {
+        let node = currentNode;
+        if (targetArg) {
+            if (targetArg === '..' || targetArg === '../') {
+                const parentPath = currentPath.slice(0, -1);
+                node = getNode(parentPath.length ? parentPath : ['/']);
+            } else if (targetArg === '/' || targetArg === '~') {
+                node = vfs;
+            } else if (currentNode.children && currentNode.children[targetArg]) {
+                node = currentNode.children[targetArg];
+            } else {
+                appendOutput(`<span style="color:#ef4444;">ls: cannot access '${escapeHtml(targetArg)}': No such file or directory</span>`);
+                return;
+            }
+        }
+
+        if (node.type !== 'dir') {
+            appendOutput(renderNodeItem(node.name, node));
+            return;
+        }
+
+        const items = Object.keys(node.children).map(key => {
+            const child = node.children[key];
+            return renderNodeItem(key, child);
+        });
+
+        appendOutput(items.join(' &nbsp;&nbsp; '));
+    }
+
+    function renderNodeItem(name, node) {
+        if (node.type === 'dir') {
+            return `<span class="cli-dir-name">${name}/</span>`;
+        } else if (node.type === 'file') {
+            return `<span class="cli-file-name">${name}</span>`;
+        } else if (node.type === 'link') {
+            return `<span class="cli-link-name">${name}*</span>`;
+        } else if (node.type === 'project') {
+            return `<span class="cli-link-name" style="color:var(--color-cyan);">${name}*</span>`;
+        }
+        return name;
+    }
+
+    function changeDirectory(targetDir) {
+        if (!targetDir || targetDir === '~' || targetDir === '/') {
+            currentPath = ['/'];
+            updatePrompt();
+            return;
+        }
+
+        if (targetDir === '..') {
+            if (currentPath.length > 1) {
+                currentPath.pop();
+            }
+            updatePrompt();
+            return;
+        }
+
+        const parts = targetDir.replace(/\/$/, '').split('/');
+        let tempPath = [...currentPath];
+
+        for (const part of parts) {
+            if (part === '.') continue;
+            if (part === '..') {
+                if (tempPath.length > 1) tempPath.pop();
+                continue;
+            }
+
+            const currNode = getNode(tempPath);
+            if (currNode && currNode.children && currNode.children[part]) {
+                if (currNode.children[part].type === 'dir') {
+                    tempPath.push(part);
+                } else {
+                    appendOutput(`<span style="color:#ef4444;">cd: not a directory: ${escapeHtml(part)}</span>`);
+                    return;
+                }
+            } else {
+                appendOutput(`<span style="color:#ef4444;">cd: no such file or directory: ${escapeHtml(targetDir)}</span>`);
+                return;
+            }
+        }
+
+        currentPath = tempPath;
+        updatePrompt();
+    }
+
+    function catFile(currentNode, fileName) {
+        if (!fileName) {
+            appendOutput(`<span style="color:#ef4444;">cat: missing filename argument. Usage: cat &lt;filename&gt;</span>`);
+            return;
+        }
+
+        if (currentNode.children && currentNode.children[fileName]) {
+            const child = currentNode.children[fileName];
+            if (child.type === 'file') {
+                appendOutput(`<pre style="font-family:inherit; color:white; white-space:pre-wrap; margin:0;">${escapeHtml(child.content)}</pre>`);
+            } else if (child.type === 'link') {
+                appendOutput(`Opening link ${child.name}... <a href="${child.url}" target="_blank" class="cli-link-name">${child.url}</a>`);
+                window.open(child.url, '_blank');
+            } else if (child.type === 'project') {
+                appendOutput(`
+<div style="border: 1px dashed var(--color-cyan); padding: 0.75rem; margin-top: 0.25rem;">
+  <div style="color:var(--color-cyan); font-weight:bold;">> ${child.title} (${child.year})</div>
+  <div style="color:white; margin: 0.25rem 0;">${child.description}</div>
+  <div style="color:var(--color-text-muted);">TECH: ${child.tech.join(', ')}</div>
+  <div style="margin-top: 0.5rem;"><a href="${child.url}" target="_blank" class="cli-link-name">> RUN ${child.url}</a></div>
+</div>
+`);
+            } else if (child.type === 'dir') {
+                appendOutput(`<span style="color:#ef4444;">cat: '${escapeHtml(fileName)}': Is a directory. Use 'cd ${escapeHtml(fileName)}' or 'ls'.</span>`);
+            }
+        } else {
+            appendOutput(`<span style="color:#ef4444;">cat: ${escapeHtml(fileName)}: No such file or directory</span>`);
+        }
+    }
+
+    function runProject(currentNode, projName) {
+        if (!projName) {
+            appendOutput(`<span style="color:#ef4444;">run: missing project name. Try 'run career-path-navigator' or 'run ieee-musb-hub'.</span>`);
+            return;
+        }
+
+        let projNode = null;
+
+        function findProject(node) {
+            if (!node || !node.children) return;
+            if (node.children[projName] && (node.children[projName].type === 'project' || node.children[projName].type === 'link')) {
+                projNode = node.children[projName];
+                return;
+            }
+            for (const k in node.children) {
+                if (node.children[k].type === 'dir') {
+                    findProject(node.children[k]);
+                }
+            }
+        }
+
+        findProject(vfs);
+
+        if (projNode && projNode.url && projNode.url !== '#' && projNode.url !== '#contact') {
+            appendOutput(`Executing binary: <span class="text-cyan">${projName}.exe</span> ➔ Opening ${projNode.url}`);
+            window.open(projNode.url, '_blank');
+        } else if (projNode && (projNode.url === '#' || projNode.url === '#contact')) {
+            appendOutput(`<span class="text-green">> Project '${projName}' is currently in hardware prototyping stage. Status: IN_DEVELOPMENT.</span>`);
+        } else {
+            appendOutput(`<span style="color:#ef4444;">run: project '${escapeHtml(projName)}' not found. Type 'ls' or 'help'.</span>`);
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    if (cliForm && cliInput) {
+        cliForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = cliInput.value;
+            cliInput.value = '';
+            executeCommand(val);
+        });
+
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                handleTabCompletion();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    if (historyIndex > 0) historyIndex--;
+                    cliInput.value = commandHistory[historyIndex] || '';
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    cliInput.value = commandHistory[historyIndex];
+                } else {
+                    historyIndex = commandHistory.length;
+                    cliInput.value = '';
+                }
+            }
+        });
+    }
+
+    function handleTabCompletion() {
+        const val = cliInput.value;
+        const commandsList = ['help', 'commands', 'ls', 'cd', 'pwd', 'cat', 'run', 'clear', 'whoami', 'contact', 'gui', 'mode'];
+        const currentNode = getNode(currentPath);
+        let childrenKeys = [];
+        if (currentNode && currentNode.children) {
+            childrenKeys = Object.keys(currentNode.children);
+        }
+
+        const parts = val.split(' ');
+        if (parts.length === 1) {
+            const matches = commandsList.filter(c => c.startsWith(parts[0]));
+            if (matches.length === 1) {
+                cliInput.value = matches[0] + ' ';
+            } else if (matches.length > 1) {
+                appendOutput(`<span style="color:var(--color-text-muted);">${matches.join(' &nbsp; ')}</span>`);
+            }
+        } else if (parts.length >= 2) {
+            const target = parts[parts.length - 1];
+            const matches = childrenKeys.filter(k => k.startsWith(target));
+            if (matches.length === 1) {
+                parts[parts.length - 1] = matches[0];
+                cliInput.value = parts.join(' ');
+            } else if (matches.length > 1) {
+                appendOutput(`<span style="color:var(--color-text-muted);">${matches.join(' &nbsp; ')}</span>`);
+            }
+        }
+    }
+
+    document.querySelectorAll('.cli-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const cmd = btn.getAttribute('data-cmd');
+            if (cmd) {
+                executeCommand(cmd);
+            }
+        });
+    });
+
+    updatePrompt();
 });
