@@ -211,8 +211,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------
-    // 4. Interactive Virtual File System & Native CLI Engine
+    // 4. Virtual File System & Viewport-Locked CLI Engine
     // ----------------------------------------
+    const asciiLogo = `
+  ______  _____  _____ _______ _____ _   _ 
+ |___  / |  ___|/  ___|__   __/|_   _| \ | |
+    / /  | |__  \ \`--.   | |    | |  |  \| |
+   / /   |  __|  \`--. \  | |    | |  | . \` |
+ ./ /___ | |___ /\__/ /  | |   _| |_ | |\  |
+ \_____/ \____/ \____/   |_|  |_____|\_| \_|
+  Computer Engineering // AI Specialization
+`;
+
     const vfs = {
         name: '/',
         type: 'dir',
@@ -389,7 +399,7 @@ RESUME: ./JustinDeLeon_Resume.pdf
         commandHistory.push(trimmed);
         historyIndex = commandHistory.length;
 
-        // Output typed prompt line in terminal output area
+        // Output typed prompt line
         appendOutput(`<span class="cli-user-cmd">root@justin:${getPathString()}$ ${escapeHtml(trimmed)}</span>`);
 
         const parts = trimmed.split(/\s+/);
@@ -404,6 +414,12 @@ RESUME: ./JustinDeLeon_Resume.pdf
             case 'show commands':
             case '?':
                 showHelp();
+                break;
+
+            case 'banner':
+            case 'sys':
+            case 'logo':
+                appendOutput(`<pre class="ascii-banner">${asciiLogo}</pre>`);
                 break;
 
             case 'ls':
@@ -425,6 +441,19 @@ RESUME: ./JustinDeLeon_Resume.pdf
                 catFile(currentNode, args[0]);
                 break;
 
+            case 'about':
+                catFile(vfs, 'about.txt');
+                break;
+
+            case 'skills':
+                catFile(vfs, 'skills.txt');
+                break;
+
+            case 'projects':
+                changeDirectory('projects');
+                listDirectory(getNode(['/', 'projects']));
+                break;
+
             case 'run':
             case 'open':
             case 'exec':
@@ -444,16 +473,12 @@ RESUME: ./JustinDeLeon_Resume.pdf
 
             case 'contact':
             case 'ping':
-                const contactEl = document.getElementById('contact');
-                if (contactEl) {
-                    contactEl.scrollIntoView({ behavior: 'smooth' });
-                }
-                appendOutput(`Scrolling down to Contact Subsystem... Email: <a href="mailto:deleonjustinandre@gmail.com" class="cli-link-name">deleonjustinandre@gmail.com</a>`);
+                catFile(vfs, 'contact.txt');
                 break;
 
             case 'gui':
             case 'mode':
-            case 'toggle':
+            case 'cards':
                 toggleViewMode('gui');
                 break;
 
@@ -468,14 +493,14 @@ RESUME: ./JustinDeLeon_Resume.pdf
 <div style="color: var(--color-cyan); font-weight: bold; margin-bottom: 0.5rem;">[AVAILABLE LINUX SHELL COMMANDS]</div>
 <table style="width:100%; border-collapse: collapse; margin: 0.25rem 0;">
   <tr><td style="color:var(--color-green); width:140px; font-weight:bold;">help / commands</td><td>Display list of all available CLI shell commands</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">ls [path]</td><td>List files & directories in current working directory</td></tr>
+  <tr><td style="color:var(--color-green); width:140px; font-weight:bold;">ls [path]</td><td>List files & directories in current working directory</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">cd &lt;dir&gt;</td><td>Change directory (e.g. <span class="cmd-highlight">cd projects</span>, <span class="cmd-highlight">cd ai</span>, <span class="cmd-highlight">cd ..</span>, <span class="cmd-highlight">cd /</span>)</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">pwd</td><td>Print current working directory path</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">cat &lt;file&gt;</td><td>Read file contents (e.g. <span class="cmd-highlight">cat about.txt</span>, <span class="cmd-highlight">cat skills.txt</span>)</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">run &lt;project&gt;</td><td>Open live project site in new tab (e.g. <span class="cmd-highlight">run career-path-navigator</span>)</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">clear / cls</td><td>Clear terminal screen output history</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">whoami</td><td>Display user identity and academic role</td></tr>
-  <tr><td style="color:var(--color-green); font-weight:bold;">contact</td><td>Scroll to contact section & show email payload</td></tr>
+  <tr><td style="color:var(--color-green); font-weight:bold;">banner</td><td>Print ASCII banner logo</td></tr>
   <tr><td style="color:var(--color-green); font-weight:bold;">gui / mode</td><td>Switch focus to classic visual project cards</td></tr>
 </table>
 <div style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem;">PRO TIP: Press <span style="color:white;">Tab</span> for auto-completion, or <span style="color:white;">Up/Down Arrow</span> keys for command history.</div>
@@ -634,11 +659,10 @@ RESUME: ./JustinDeLeon_Resume.pdf
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // CLI Input Keydown Event Listener (Catches Enter to prevent page reloads!)
     if (cliInputField) {
         cliInputField.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Stop GET form submit and page refresh!
+                e.preventDefault();
                 const val = cliInputField.value;
                 cliInputField.value = '';
                 executeCommand(val);
@@ -666,7 +690,7 @@ RESUME: ./JustinDeLeon_Resume.pdf
 
     function handleTabCompletion() {
         const val = cliInputField.value;
-        const commandsList = ['help', 'commands', 'ls', 'cd', 'pwd', 'cat', 'run', 'clear', 'whoami', 'contact', 'gui'];
+        const commandsList = ['help', 'commands', 'ls', 'cd', 'pwd', 'cat', 'run', 'clear', 'whoami', 'contact', 'gui', 'banner', 'about', 'skills', 'projects'];
         const currentNode = getNode(currentPath);
         let childrenKeys = [];
         if (currentNode && currentNode.children) {
@@ -693,7 +717,7 @@ RESUME: ./JustinDeLeon_Resume.pdf
         }
     }
 
-    // Toggle CLI vs GUI View Mode
+    // Toggle CLI Mode vs GUI Viewport Mode
     function toggleViewMode(targetMode) {
         if (!targetMode) {
             currentMode = currentMode === 'cli' ? 'gui' : 'cli';
@@ -702,6 +726,9 @@ RESUME: ./JustinDeLeon_Resume.pdf
         }
 
         if (currentMode === 'gui') {
+            document.body.classList.remove('mode-cli');
+            document.body.classList.add('mode-gui');
+
             const projectsSection = document.getElementById('projects');
             if (projectsSection) {
                 projectsSection.scrollIntoView({ behavior: 'smooth' });
@@ -714,6 +741,9 @@ RESUME: ./JustinDeLeon_Resume.pdf
             }
             appendOutput(`<span class="text-cyan">Switched focus down to Visual Project Cards.</span>`);
         } else {
+            document.body.classList.remove('mode-gui');
+            document.body.classList.add('mode-cli');
+
             const homeSection = document.getElementById('home');
             if (homeSection) {
                 homeSection.scrollIntoView({ behavior: 'smooth' });
@@ -725,7 +755,6 @@ RESUME: ./JustinDeLeon_Resume.pdf
                 activeModeBadge.style.color = 'var(--color-cyan)';
             }
             if (cliInputField) cliInputField.focus();
-            appendOutput(`<span class="text-green">Active mode: Interactive Shell CLI. Type 'help' or 'ls'.</span>`);
         }
     }
 
@@ -735,5 +764,6 @@ RESUME: ./JustinDeLeon_Resume.pdf
         });
     }
 
-    updatePrompt();
+    // Set initial mode to CLI mode with viewport lock
+    toggleViewMode('cli');
 });

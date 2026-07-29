@@ -675,16 +675,89 @@ ul {
   font-style: italic;
 }
 
-.project-dir-header {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  border-bottom: 1px dashed var(--color-border);
-  padding-bottom: 0.25rem;
+/* =========================================
+   CLI Mode Viewport Lock vs GUI Mode
+   ========================================= */
+body.mode-cli {
+  overflow: hidden;
+  height: 100vh;
 }
 
-.mt-5 {
-  margin-top: 2.5rem;
+body.mode-cli .hero-section {
+  padding: 5rem 0 1rem 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
+
+body.mode-cli .terminal-window {
+  height: calc(100vh - 6.5rem);
+  display: flex;
+  flex-direction: column;
+}
+
+body.mode-cli .terminal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.25rem;
+}
+
+body.mode-cli .hero-title,
+body.mode-cli .hero-subtitle,
+body.mode-cli .hero-description,
+body.mode-cli .hero-actions,
+body.mode-cli .availability-badge,
+body.mode-cli .sys-msg {
+  display: none; /* Collapses hero intro text in CLI Mode to give max room to terminal screen */
+}
+
+body.mode-cli .terminal-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: 0;
+  max-height: none;
+}
+
+body.mode-cli .cli-output {
+  flex: 1;
+  max-height: none;
+}
+
+body.mode-cli .skills-section,
+body.mode-cli .projects-section,
+body.mode-cli .contact-section,
+body.mode-cli .footer {
+  display: none; /* Hide visual sections in CLI Mode */
+}
+
+body.mode-gui {
+  overflow-y: auto;
+}
+
+body.mode-gui .skills-section,
+body.mode-gui .projects-section,
+body.mode-gui .contact-section,
+body.mode-gui .footer {
+  display: block;
+}
+
+.ascii-banner {
+  color: var(--color-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  white-space: pre;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 0 5px var(--color-cyan);
+}
+
+@media (max-width: 640px) {
+  .ascii-banner { font-size: 0.5rem; }
+}
+
 
 
