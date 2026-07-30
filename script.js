@@ -775,5 +775,12 @@ RESUME: ./JustinDeLeon_Resume.pdf
         });
     }
 
-    toggleViewMode('cli');
+    // Auto-detect mobile devices or small screens (<768px)
+    const isMobile = window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+        toggleViewMode('gui');
+    } else {
+        toggleViewMode('cli');
+    }
 });
+
