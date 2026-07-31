@@ -275,7 +275,7 @@ CURRENT FOCUS:
                 type: 'file',
                 description: 'Communication Channels',
                 content: `
-EMAIL: deleonjustinandre@gmail.com
+EMAIL: jaddeleon@mymail.mapua.edu.ph
 LINKEDIN: https://www.linkedin.com/in/j-deleon/
 GITHUB: https://github.com/justinovate
 RESUME: ./JustinDeLeon_Resume.pdf
